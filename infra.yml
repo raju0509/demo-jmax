@@ -19,7 +19,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: "10.0.1.0/24"
-      AvailabilityZone: "us-west-2a"
+      AvailabilityZone: "us-east-1a"
       MapPublicIpOnLaunch: "true"
       Tags:
         - Key: Name
@@ -30,7 +30,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: "10.0.2.0/24"
-      AvailabilityZone: "us-west-2b"
+      AvailabilityZone: "us-east-1b"
       MapPublicIpOnLaunch: "true"
       Tags:
         - Key: Name
@@ -42,7 +42,7 @@ Resources:
     Properties:
       InstanceType: t3.medium
       ImageId: "ami-0e449927258d45bc4"
-      KeyName: "your-key-name"  # Replace with your actual key name
+      KeyName: "your-key-name"
       SubnetId: !Ref PublicSubnet1
       SecurityGroupIds:
         - !Ref EC2SecurityGroup
