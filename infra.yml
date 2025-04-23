@@ -7,8 +7,8 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: "10.0.0.0/16"
-      EnableDnsSupport: "true"
-      EnableDnsHostnames: "true"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
       Tags:
         - Key: Name
           Value: "MyVPC"
@@ -20,7 +20,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: "10.0.1.0/24"
       AvailabilityZone: "us-east-1a"
-      MapPublicIpOnLaunch: "true"
+      MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
           Value: "PublicSubnet1"
@@ -31,10 +31,54 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: "10.0.2.0/24"
       AvailabilityZone: "us-east-1b"
-      MapPublicIpOnLaunch: "true"
+      MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
           Value: "PublicSubnet2"
+
+  # Internet Gateway and attachment
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: "MyInternetGateway"
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Route Table and route to the internet
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: "PublicRouteTable"
+
+  Route:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  # Route table associations
+  SubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref RouteTable
+
+  SubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref RouteTable
+
 
   # EC2 Instance
   EC2Instance:
@@ -42,7 +86,7 @@ Resources:
     Properties:
       InstanceType: t3.medium
       ImageId: "ami-0e449927258d45bc4"
-      KeyName: "your-key-name"
+      KeyName: "my-keypair"
       SubnetId: !Ref PublicSubnet1
       SecurityGroupIds:
         - !Ref EC2SecurityGroup
