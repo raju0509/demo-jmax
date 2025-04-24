@@ -230,6 +230,28 @@ Resources:
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
 
+  aimaxcoinTargetGroupAttachment:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroupAttachment
+    Properties:
+      TargetGroupArn: !Ref JaimaxcoinTargetGroup
+      TargetId: !Ref EC2Instance
+      Port: 80
+
+  APITargetGroupAttachment:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroupAttachment
+    Properties:
+      TargetGroupArn: !Ref APITargetGroup
+      TargetId: !Ref EC2Instance
+      Port: 90
+
+  AdminTargetGroupAttachment:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroupAttachment
+    Properties:
+      TargetGroupArn: !Ref AdminTargetGroup
+      TargetId: !Ref EC2Instance
+      Port: 95
+    
+
   # ALB Listeners
   HTTPListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
